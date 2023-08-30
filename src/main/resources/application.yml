@@ -1,0 +1,72 @@
+spring:
+  profiles:
+    active: local
+  application:
+    name: core
+  jackson:
+    time-zone: Asia/Tashkent
+
+  jpa:
+    properties:
+      hibernate:
+        # The SQL dialect makes Hibernate generate better SQL for the chosen database
+        dialect: org.hibernate.dialect.PostgreSQL9Dialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        # Used to control if we should consult the JDBC metadata to determine certain Settings default values when the db may not be available
+        temp:
+          use_jdbc_metadata_defaults: false
+        # Initialize Lazy Proxies or Collections outside a given Transactional Persistence Context.
+        enable_lazy_load_no_trans: true
+        default_schema: public
+
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+    show-sql: true
+    # Hibernate ddl auto (create, create-drop, validate, pay)
+    hibernate:
+      ddl-auto: none
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://127.0.0.1:5432/core
+    username: core
+    password: 123456
+
+    hikari:
+      pool-name: SpringBootJPAHikariCP
+      connection-timeout: 60000
+      idle-timeout: 60000
+      max-lifetime: 180000
+      maximum-pool-size: 5
+      minimum-idle: 1
+      connection-test-query: SELECT 1
+      auto-commit: true
+      driver-class-name: org.postgresql.Driver
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.xml
+    liquibase-schema: migration
+    default-schema: public
+server:
+  port: 8093
+  forward-headers-strategy: none
+  servlet:
+    context-path: /core
+  tomcat:
+    mbeanregistry:
+      enabled: true
+
+javers:
+  sqlSchema: javers
+  sqlSchemaManagementEnabled: true
+  sqlGlobalIdCacheDisabled: false
+  objectAccessHook: org.javers.hibernate.integration.HibernateUnproxyObjectAccessHook
+  sqlGlobalIdTableName: global_id
+  sqlCommitTableName: commit
+  sqlSnapshotTableName: snapshot
+  sqlCommitPropertyTableName: commit_property
+
+
+exceptions:
+  show-stack-trace: true
+  instance-uri: urn:traceId:%s
